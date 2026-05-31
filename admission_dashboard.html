@@ -391,7 +391,15 @@ function sendConfirmationToN8N(req) {
   fetch("https://mazoon1.abdulonline.online/webhook/admission-confirm", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(req)
+    body: JSON.stringify({
+      studentId:          req.studentId,
+      studentName:        req.studentName,
+      studentEmail:       req.studentEmail,
+      submittedAt:        req.submittedAt,
+      decision:           req.decision,
+      admissionConfirmed: "yes",
+      confirmedAt:        req.confirmedAt
+    })
   }).then(() => console.log("Sent to N8N ✅"))
     .catch(err => console.error("N8N error:", err));
 }
