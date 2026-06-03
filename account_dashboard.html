@@ -846,14 +846,7 @@ function buildResponseForm(req) {
 
     <!-- Decision -->
     <label class="field-label">Decision</label>
-    <div class="decision-row">
-      <button class="decision-btn approve-btn" id="approve-${req.id}" onclick="selectDecision(${req.id}, 'approved')">
-        ✅ Approve
-      </button>
-      <button class="decision-btn reject-btn" id="reject-${req.id}" onclick="selectDecision(${req.id}, 'rejected')">
-        ❌ Reject
-      </button>
-    </div>
+    
 
     <!-- PIN -->
     <label class="field-label">Employee PIN</label>
@@ -916,8 +909,7 @@ function submitResponse(id) {
   if (!req) return;
 
   const comment = document.getElementById(`comment-${id}`)?.value || '';
-  const decision = selectedDecisions[id];
-  if (!decision) { alert('Please select Approve or Reject'); return; }
+  const decision = 'approved';
 
   const employeeName = verifiedEmployees[id];
   if (!employeeName) { alert('Please enter a valid PIN'); return; }
