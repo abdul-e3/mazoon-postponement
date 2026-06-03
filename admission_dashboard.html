@@ -206,6 +206,29 @@
     letter-spacing: 0.8px;
     font-style: italic;
   }
+
+  .decision-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .decision-btn {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid var(--gray-200);
+    border-radius: 10px;
+    background: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .decision-btn:hover { border-color: var(--blue); }
+  .decision-btn.approve-btn.selected { background: var(--green); color: white; border-color: var(--green); }
+  .decision-btn.reject-btn.selected  { background: var(--red);   color: white; border-color: var(--red);   }
+
 </style>
 </head>
 <body>
@@ -353,7 +376,12 @@ function buildCard(req, isNew) {
         ${req.comment ? `<div class="finance-comment">"${req.comment}"</div>` : ""}
         ${req.employeeName ? `<div style="background:var(--blue-light);color:var(--blue);padding:10px 16px;border-radius:8px;font-weight:600;font-size:14px;margin-bottom:12px;">✍️ ${req.employeeName}</div>` : req.signatureData ? `<div style="background:var(--blue-light);color:var(--blue);padding:10px 16px;border-radius:8px;font-weight:600;font-size:14px;margin-bottom:12px;">✍️ ${req.signatureData}</div>` : ""}
 
-        ${isNew ? `<button class="confirm-btn" onclick="confirmRequest(${req.id})">☑️ Confirm & Notify Student</button>` : `
+        ${isNew ? `
+        <div class="decision-row">
+          <button class="decision-btn approve-btn" id="adm-approve-${req.id}" onclick="selectAdmDecision(${req.id}, 'approved')">✅ Approve</button>
+          <button class="decision-btn reject-btn"  id="adm-reject-${req.id}"  onclick="selectAdmDecision(${req.id}, 'rejected')">❌ Reject</button>
+        </div>
+        <button class="confirm-btn" onclick="confirmRequest(${req.id})">📤 Send to Student</button>`  : `
           <div class="confirmed-tag">☑️ Confirmed — Student has been notified</div>
           <br>
           <button class="delete-btn" onclick="deleteRequest(${req.id})">🗑️ Delete Request</button>
@@ -383,10 +411,21 @@ function deleteRequest(id) {
   saveAndRender();
 }
 
+function selectAdmDecision(id, val) {
+  selectedAdmDecisions[id] = val;
+  const approveBtn = document.getElementById('adm-approve-' + id);
+  const rejectBtn  = document.getElementById('adm-reject-'  + id);
+  if (approveBtn) approveBtn.classList.toggle('selected', val === 'approved');
+  if (rejectBtn)  rejectBtn.classList.toggle('selected',  val === 'rejected');
+}
+
 function confirmRequest(id) {
+  const admDecision = selectedAdmDecisions[id];
+  if (!admDecision) { alert('Please select Approve or Reject first'); return; }
   if (!confirm("Confirm this decision and notify the student?")) return;
   const req = requests.find(r => r.id === id);
   if (!req) return;
+  req.decision = admDecision;
   req.admissionStatus = "confirmed";
   req.confirmedAt = new Date().toISOString();
   saveAndRender();
