@@ -296,6 +296,7 @@
 
 <script>
 let requests = JSON.parse(localStorage.getItem("admission_requests") || "[]");
+const selectedAdmDecisions = {};
 
 function saveAndRender() {
   localStorage.setItem("admission_requests", JSON.stringify(requests));
@@ -422,7 +423,6 @@ function selectAdmDecision(id, val) {
 function confirmRequest(id) {
   const admDecision = selectedAdmDecisions[id];
   if (!admDecision) { alert('Please select Approve or Reject first'); return; }
-  if (!confirm("Confirm this decision and notify the student?")) return;
   const req = requests.find(r => r.id === id);
   if (!req) return;
   req.decision = admDecision;
