@@ -649,24 +649,17 @@
     </div>
   </div>
   <div class="stat-item">
-    <div class="stat-icon blue">🕐</div>
+    <div class="stat-icon blue">🆕</div>
     <div>
       <div class="stat-num" id="statPending">0</div>
-      <div class="stat-label">Pending</div>
+      <div class="stat-label">New</div>
     </div>
   </div>
   <div class="stat-item">
-    <div class="stat-icon green">✅</div>
+    <div class="stat-icon green">✔️</div>
     <div>
       <div class="stat-num" id="statApproved">0</div>
-      <div class="stat-label">Approved</div>
-    </div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-icon red">❌</div>
-    <div>
-      <div class="stat-num" id="statRejected">0</div>
-      <div class="stat-label">Rejected</div>
+      <div class="stat-label">Responded</div>
     </div>
   </div>
 </div>
@@ -754,8 +747,7 @@ function renderAll() {
   // Stats
   document.getElementById('statTotal').textContent = requests.length;
   document.getElementById('statPending').textContent = pending.length;
-  document.getElementById('statApproved').textContent = requests.filter(r => r.status === 'approved').length;
-  document.getElementById('statRejected').textContent = requests.filter(r => r.status === 'rejected').length;
+  document.getElementById('statApproved').textContent = requests.filter(r => r.status && r.status !== '').length;
 
   // Badges
   document.getElementById('newCount').textContent = pending.length;
@@ -897,7 +889,7 @@ function selectDecision(id, decision) {
 
 function checkSubmitReady(id) {
   const btn = document.getElementById(`submit-${id}`);
-  if (btn && selectedDecisions[id] && verifiedEmployees[id]) {
+  if (btn && verifiedEmployees[id]) {
     btn.disabled = false;
   } else if (btn) {
     btn.disabled = true;
