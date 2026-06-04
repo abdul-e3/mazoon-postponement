@@ -783,7 +783,7 @@ function buildCard(req, isNew) {
   const initials = req.studentName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
   const time = new Date(req.submittedAt).toLocaleString('en-GB', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
   const statusClass = req.status === 'approved' ? 'approved' : req.status === 'rejected' ? 'rejected' : 'pending';
-  const statusLabel = req.status === 'approved' ? '✅ Approved' : req.status === 'rejected' ? '❌ Rejected' : '🕐 Pending';
+  const statusLabel = req.status ? '📤 Sent' : '🕐 Pending';
 
   return `
   <div class="request-card ${isNew ? 'new-request' : req.status}" id="card-${req.id}">
@@ -858,9 +858,9 @@ function buildRespondedView(req) {
   const respondedTime = req.respondedAt ? new Date(req.respondedAt).toLocaleString('en-GB', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'}) : '';
   return `
     <div class="responded-view" style="display:block">
-      <div class="responded-result ${req.status}">
-        <span class="result-icon">${isApproved ? '✅' : '❌'}</span>
-        <span class="result-text">${isApproved ? 'Approved' : 'Rejected'} &nbsp;·&nbsp; ${respondedTime}</span>
+      <div class="responded-result approved">
+        <span class="result-icon">📤</span>
+        <span class="result-text">Sent to Admission &nbsp;·&nbsp; ${respondedTime}</span>
       </div>
       ${req.comment ? `<p class="responded-comment">"${req.comment}"</p>` : ''}
       ${req.employeeName ? `<div style="background:var(--blue-light);color:var(--blue);padding:10px 16px;border-radius:8px;font-weight:600;font-size:14px;margin-top:8px;">✍️ ${req.employeeName}</div>` : ''}
