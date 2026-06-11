@@ -383,7 +383,9 @@ function buildCard(req, isNew) {
           <button class="decision-btn reject-btn"  id="adm-reject-${req.id}"  onclick="selectAdmDecision(${req.id}, 'rejected')">❌ Reject</button>
         </div>
         <button class="confirm-btn" onclick="confirmRequest(${req.id})">📤 Send to Student</button>`  : `
-          <div class="confirmed-tag">☑️ Confirmed — Student has been notified</div>
+          <div class="confirmed-tag" style="background:${req.admissionDecision === 'approved' ? 'var(--green-light)' : 'var(--red-light)'}; color:${req.admissionDecision === 'approved' ? 'var(--green)' : 'var(--red)'}">
+            ${req.admissionDecision === 'approved' ? '✅ Approved' : '❌ Rejected'} — Student has been notified
+          </div>
           <br>
           <button class="delete-btn" onclick="deleteRequest(${req.id})">🗑️ Delete Request</button>
         `}
@@ -425,7 +427,7 @@ function confirmRequest(id) {
   if (!admDecision) { alert('Please select Approve or Reject first'); return; }
   const req = requests.find(r => r.id === id);
   if (!req) return;
-  req.decision = admDecision;
+  req.admissionDecision = admDecision;
   req.admissionStatus = "confirmed";
   req.confirmedAt = new Date().toISOString();
   saveAndRender();
@@ -443,7 +445,7 @@ function sendConfirmationToN8N(req) {
       studentName:        req.studentName,
       studentEmail:       req.studentEmail,
       submittedAt:        req.submittedAt,
-      decision:           req.decision,
+      decision:           req.admissionDecision,
       admissionConfirmed: "yes",
       confirmedAt:        req.confirmedAt
     })
